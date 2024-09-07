@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="enter city name" spellcheck="false">
+            <button type="submit"><i class="fa fa-search" class="img"></i></button>
+        </div>
+
+        <div class="weather">
+            <img src="./rain.jpg" class="weather-icon">
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">New York</h2>
+
+            <div class="details">
+                <div class="col">
+                    <img src="./humidity.png" alt="">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="./windy.png" alt="">
+                    <div>
+                        <p class="wind">50 km/h</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <script>
+        const apiKey = "d79e218a9c8fdbcd2d22dd0e8ae5c528";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?&units=metric";
+       const searchBox=document.querySelector(".search input");
+       const searchBtn=document.querySelector(".search button");
+
+        async function checkWhether(city) {
+            const response = await fetch(apiUrl  +`&appid=${apiKey}`);
+            var data = await response.json();
+
+            console.log(data);
+
+            document.querySelector(".city").innerHTML=data.name;
+            document.querySelector(".temp").innerHTML=Math.round(data.main.temp)+"°C ";
+            document.querySelector(".humidity").innerHTML=data.main.humidity+"%";
+            document.querySelector(".wind").innerHTML=data.wind.speed+"km/h";
+        }
+
+searchBtn.addEventListener("click",()=>{
+    checkWhether(searchBox.value);
+})
+    </script> -->
+    <script>
+        const apiKey = "d79e218a9c8fdbcd2d22dd0e8ae5c528";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather";
+        const searchBox = document.querySelector(".search input");
+        const searchBtn = document.querySelector(".search button");
+        const weatherIcon = document.querySelector(".weather-icon");
+    
+        async function checkWeather(city) {
+            try {
+                const response = await fetch(`${apiUrl}?q=${city}&units=metric&appid=${apiKey}`);
+                if (!response.ok) {
+                    throw new Error("City not found or API request failed");
+                }
+                const data = await response.json();
+    
+                console.log(data);
+    
+                document.querySelector(".city").innerHTML = data.name;
+                document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+                document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+                document.querySelector(".wind").innerHTML = data.wind.speed + "km/h";
+    
+                // Check the weather condition and update the icon
+                const weatherCondition = data.weather[0].main;
+                switch (weatherCondition) {
+                    case "Clouds":
+                        weatherIcon.src = "cloud.jpg";
+                        break;
+                    case "Clear":
+                        weatherIcon.src = "clear.png";
+                        break;
+                    case "Rain":
+                        weatherIcon.src = "rain.jpg";
+                        break;
+                    case "Drizzle":
+                        weatherIcon.src = "drizzle.png";
+                        break;
+                    case "Mist":
+                        weatherIcon.src = "mist.png";
+                        break;
+                    default:
+                        weatherIcon.src = "cloud.jpg"; // Fallback icon
+                        break;
+                }
+            } catch (error) {
+                console.error(error);
+                // Optionally, display an error message to the user
+                document.querySelector(".city").innerHTML = "Error";
+                document.querySelector(".temp").innerHTML = "";
+                document.querySelector(".humidity").innerHTML = "";
+                document.querySelector(".wind").innerHTML = "";
+                weatherIcon.src = "default.png"; // Fallback icon for errors
+            }
+        }
+    
+        searchBtn.addEventListener("click", () => {
+            checkWeather(searchBox.value);
+        });
+    </script>
+    
+
+</body>
+
+</html>
